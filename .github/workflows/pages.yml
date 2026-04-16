@@ -57,7 +57,7 @@ jobs:
           <body>
             <h1>Bitcoin Mining Operations — Analysis Notebooks</h1>
             <p>Deep-dive exploratory analyses on synthetic 14-day telemetry for a 180-miner site.
-               See the <a href="https://github.com/ricardo-hdrn/mining-ops-analysis">source repository</a>.</p>
+               See the <a href="https://github.com/ricardo-hdrn/bitcoin-mining-ai-study">source repository</a>.</p>
             <ul>
               <li><a href="01_data_quality_schema.html">01. Data Quality & Schema</a>
                 <span class="desc">Completeness checks, range validation, schema critique.</span></li>

@@ -2,7 +2,7 @@
 
 Deep-dive notebooks exploring bitcoin mining site operational data across five analytical dimensions. Built as a domain-learning exercise for industrial-scale mining operations: data quality, efficiency analysis, anomaly detection, curtailment optimization, and predictive maintenance.
 
-📊 **[Browse the rendered notebooks on GitHub Pages →](https://ricardo-hdrn.github.io/mining-ops-analysis/)**
+📊 **[Browse the rendered notebooks on GitHub Pages →](https://ricardo-hdrn.github.io/bitcoin-mining-ai-study/)**
 
 ## Notebooks
 
