@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Large generated dataset — regenerate with generate_site_data.py
+site_telemetry.csv
+
+# OS
+.DS_Store
+
+# Build output
+html/

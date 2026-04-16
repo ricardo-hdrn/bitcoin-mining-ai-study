@@ -1,0 +1,89 @@
+name: Build & Deploy Notebooks to Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          pip install nbconvert jupyter
+
+      - name: Convert notebooks to HTML
+        run: |
+          mkdir -p site
+          for nb in *.ipynb; do
+            jupyter nbconvert --to html "$nb" --output-dir site/
+          done
+
+      - name: Build index
+        run: |
+          cat > site/index.html <<'HTML'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <title>Bitcoin Mining Operations — Analysis Notebooks</title>
+            <style>
+              body { font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+                     max-width: 760px; margin: 3rem auto; padding: 0 1.5rem; color: #222; line-height: 1.6; }
+              h1 { border-bottom: 2px solid #333; padding-bottom: 0.5rem; }
+              ul { list-style: none; padding: 0; }
+              li { margin: 1rem 0; padding: 1rem; background: #f6f8fa; border-radius: 6px; }
+              a { color: #0366d6; text-decoration: none; font-weight: 600; }
+              a:hover { text-decoration: underline; }
+              .desc { display: block; color: #586069; font-weight: normal; margin-top: 0.25rem; }
+            </style>
+          </head>
+          <body>
+            <h1>Bitcoin Mining Operations — Analysis Notebooks</h1>
+            <p>Deep-dive exploratory analyses on synthetic 14-day telemetry for a 180-miner site.
+               See the <a href="https://github.com/ricardo-hdrn/mining-ops-analysis">source repository</a>.</p>
+            <ul>
+              <li><a href="01_data_quality_schema.html">01. Data Quality & Schema</a>
+                <span class="desc">Completeness checks, range validation, schema critique.</span></li>
+              <li><a href="02_efficiency_waste.html">02. Efficiency & Waste Quantification</a>
+                <span class="desc">Per-miner efficiency gaps, dollar waste, degradation trends.</span></li>
+              <li><a href="03_anomaly_detection.html">03. Anomaly Detection</a>
+                <span class="desc">Z-score, IQR, Isolation Forest, container-wide event detection.</span></li>
+              <li><a href="04_curtailment_optimization.html">04. Curtailment Optimization</a>
+                <span class="desc">Merit-order dispatch, hysteresis, dynamic programming, sensitivity analysis.</span></li>
+              <li><a href="05_predictive_maintenance.html">05. Predictive Maintenance</a>
+                <span class="desc">Degradation scoring, XGBoost failure prediction, maintenance priority list.</span></li>
+            </ul>
+          </body>
+          </html>
+          HTML
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
